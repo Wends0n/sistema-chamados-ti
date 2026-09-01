@@ -18,25 +18,15 @@ public class Chamado {
     @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "estado")
-    private String estado;
-
-    @Column(name = "prioridade")
-    private String prioridade;
-
-    @Column(name = "dataAbertura")
-    private LocalDate dataAbertura;
 
     public Chamado(){
 
     }
 
-    public Chamado(String titulo, String descricao, String estado, String prioridade, LocalDate dataAbertura){
+    public Chamado(String titulo, String descricao){
         this.titulo = titulo;
         this.descricao = descricao;
-        this.estado = estado;
-        this.prioridade = prioridade;
-        this.dataAbertura = dataAbertura;
+
     }
 
     public long getId(){
@@ -59,29 +49,11 @@ public class Chamado {
         this.descricao = descricao;
     }
 
-    public String getEstado(){
-        return estado;
-    }
 
-    public void setEstado(String estado){
-        this.estado = estado;
-    }
-
-    public String getPrioridade(){
-        return prioridade;
-    }
-
-    public void setPrioridade(String prioridade) {
-        this.prioridade = prioridade;
-    }
-
-    public LocalDate getDataAbertura(){
-        return dataAbertura;
-    }
 
     @Override
     public String toString(){
-        return "Chamado[id = " + id + ", titulo = " + titulo + ", descricao = " + descricao + ", estado = " + estado + ", prioridade = " + prioridade + ", data de abertura = " + dataAbertura + "]";
+        return "Chamado[id = " + id + ", titulo = " + titulo + ", descricao = " + descricao + "]";
     }
 
 
