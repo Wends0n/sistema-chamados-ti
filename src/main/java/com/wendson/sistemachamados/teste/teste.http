@@ -1,0 +1,10 @@
+POST http://localhost:8080/api/chamados
+Content-Type: application/json
+
+{
+  "titulo": "Computador nao liga",
+  "descricao": "Teste de criação de chamado",
+  "solicitante": "Marta",
+  "estado": "ABERTO",
+  "prioridade": "MEDIA"
+}
