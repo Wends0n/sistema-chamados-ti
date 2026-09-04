@@ -5,7 +5,9 @@ import java.util.List;
 import com.wendson.sistemachamados.entity.Chamado;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+//Camada que conversa com o banco
 public interface ChamadoRepository extends JpaRepository<Chamado,Long>{
-    List<Chamado> findByTituloContaining(String titulo);
+
+    List<Chamado> findByTituloContainingIgnoreCase(String titulo);
 
 }

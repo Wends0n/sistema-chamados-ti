@@ -14,11 +14,14 @@ import java.util.List;
 public class ChamadoServiceImpl implements ChamadoService {
     private final ChamadoRepository repository;
 
+    //Injeção de dependencia por construtor
+    //ChamadoServiceImpl depende de Repository
     public ChamadoServiceImpl(ChamadoRepository repository) { this.repository = repository; }
 
+    //Transação destinada apenas para leitura
     @Override @Transactional(readOnly = true)
     public List<ChamadoResponseDTO> listar(String titulo) {
-        List<Chamado> chamados = (titulo == null || titulo.isBlank()) ? repository.findAll() : repository.findByTituloContaining(titulo);
+        List<Chamado> chamados = (titulo == null || titulo.isBlank()) ? repository.findAll() : repository.findByTituloContainingIgnoreCase(titulo);
         return chamados.stream().map(this::toResponse).toList();
     }
 
@@ -57,6 +60,10 @@ public class ChamadoServiceImpl implements ChamadoService {
         chamado.setPrioridade(request.getPrioridade());
     }
 
+
+
+    //Converte Entity -> DTO
+    //Mantem o controller independente da entity
     private ChamadoResponseDTO toResponse(Chamado chamado) {
         ChamadoResponseDTO response = new ChamadoResponseDTO();
         response.setId(chamado.getId());

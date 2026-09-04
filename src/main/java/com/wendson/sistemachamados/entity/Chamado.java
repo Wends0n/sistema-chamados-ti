@@ -1,8 +1,5 @@
 package com.wendson.sistemachamados.entity;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,7 +7,7 @@ import java.time.LocalDateTime;
 public class Chamado {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "titulo")

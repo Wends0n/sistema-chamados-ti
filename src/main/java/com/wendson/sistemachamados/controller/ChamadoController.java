@@ -1,11 +1,11 @@
 package com.wendson.sistemachamados.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import com.wendson.sistemachamados.repository.ChamadoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wendson.sistemachamados.dto.ChamadoRequestDTO;
+import com.wendson.sistemachamados.dto.ChamadoResponseDTO;
+import com.wendson.sistemachamados.service.ChamadoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,89 +19,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wendson.sistemachamados.entity.Chamado;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/chamados")
+
+//Representa a camada HTTP
+//Nao deve conter regra de acesso ao banco
+//HTTP -> Controller -> Service
+
 public class ChamadoController {
 
-    @Autowired
-    ChamadoRepository chamadoRepository;
+    private final ChamadoService service;
 
-    @GetMapping("/chamados")
-    public ResponseEntity<List<Chamado>> getAllChamados(@RequestParam(required = false) String titulo){
-        try{
-            List<Chamado> chamados = new ArrayList<Chamado>();
-            if (titulo == null)
-                chamadoRepository.findAll().forEach(chamados::add);
-            else
-                chamadoRepository.findByTituloContaining(titulo).forEach(chamados::add);
-            if (chamados.isEmpty())
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ChamadoController(ChamadoService service) { this.service = service; }
 
-            return new ResponseEntity<>(chamados,HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+    @GetMapping
+    public ResponseEntity<List<ChamadoResponseDTO>> listar(@RequestParam(required = false) String titulo) {
+        return ResponseEntity.ok(service.listar(titulo));
     }
 
-    @GetMapping("/chamados/{id}")
-    public ResponseEntity<Chamado> getChamadoId(@PathVariable("id") long id){
-        Optional<Chamado> chamadoData = chamadoRepository.findById(id);
-
-        if(chamadoData.isPresent())
-            return new ResponseEntity<>(chamadoData.get(), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<ChamadoResponseDTO> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
-    @PostMapping("/chamados")
-    public ResponseEntity<Chamado> createChamado(@RequestBody Chamado chamado){
-        try{
-            Chamado _chamado = chamadoRepository.save(new Chamado(chamado.getTitulo(),chamado.getDescricao(),chamado.getSolicitante(),chamado.getPrioridade(),chamado.getEstado()));
-            return new ResponseEntity<>(_chamado, HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping
+    public ResponseEntity<ChamadoResponseDTO> criar(@Valid @RequestBody ChamadoRequestDTO request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.criar(request));
     }
 
-    @PutMapping("/chamados/{id}")
-    public ResponseEntity<Chamado> updateChamado(@PathVariable("id") long id, @RequestBody Chamado chamado){
-        Optional<Chamado> chamadoData = chamadoRepository.findById(id);
-
-        if(chamadoData.isPresent()){
-            Chamado chamadoResposta = chamadoData.get();
-            chamadoResposta.setTitulo(chamadoResposta.getTitulo());
-            chamadoResposta.setDescricao(chamadoResposta.getDescricao());
-            chamadoResposta.setSolicitante(chamadoResposta.getSolicitante());
-            chamadoResposta.setPrioridade(chamadoResposta.getPrioridade());
-            chamadoResposta.setEstado(chamadoResposta.getEstado());
-            return new ResponseEntity<>(chamadoRepository.save(chamadoResposta), HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    @PutMapping("/{id}")
+    public ResponseEntity<ChamadoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ChamadoRequestDTO request) {
+        return ResponseEntity.ok(service.atualizar(id, request));
     }
 
-    @DeleteMapping("/chamados/{id}")
-    public ResponseEntity<HttpStatus> deleteChamado(@PathVariable("id") long id ){
-        try{
-            chamadoRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        service.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/chamados")
-    public ResponseEntity<HttpStatus> deleteAllChamados(){
-        try{
-            chamadoRepository.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @DeleteMapping
+    public ResponseEntity<Void> excluirTodos() {
+        service.excluirTodos();
+        return ResponseEntity.noContent().build();
     }
 
 }
