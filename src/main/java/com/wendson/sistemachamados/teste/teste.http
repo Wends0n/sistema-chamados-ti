@@ -1,10 +1,101 @@
-POST http://localhost:8080/api/chamados
+@baseUrl = http://localhost:8080/api
+
+### 1. Cadastrar solicitante
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{"nome":"Marta","email":"marta@exemplo.com","tipoUsuario":"SOLICITANTE"}
+
+> {% client.global.set("solicitanteId", response.body.id); %}
+
+### 2. Cadastrar técnico
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{"nome":"João","email":"joao@exemplo.com","tipoUsuario":"TECNICO"}
+
+> {% client.global.set("tecnicoId", response.body.id); %}
+
+### 3. Cadastrar categoria
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{"nome":"Hardware","descricao":"Problemas com equipamentos"}
+
+> {% client.global.set("categoriaId", response.body.id); %}
+
+### 4. Criar chamado
+POST {{baseUrl}}/chamados
 Content-Type: application/json
 
 {
-  "titulo": "Computador nao liga",
-  "descricao": "Teste de criação de chamado",
-  "solicitante": "Marta",
-  "estado": "ABERTO",
-  "prioridade": "MEDIA"
+  "titulo":"Computador não liga",
+  "descricao":"Sem sinal ao pressionar o botão",
+  "solicitanteId": 3,
+  "tecnicoId": 1,
+  "categoriaId": 1,
+  "estado":"ABERTO",
+  "prioridade":"ALTA"
 }
+
+> {% client.global.set("chamadoId", response.body.id); %}
+
+### 5. Comentar
+POST {{baseUrl}}/comentarios
+Content-Type: application/json
+
+{"mensagem":"Vou verificar a fonte","usuarioId":{{tecnicoId}},"chamadoId":{{chamadoId}}}
+
+> {% client.global.set("comentarioId", response.body.id); %}
+
+### 6. Registrar histórico explicitamente
+POST {{baseUrl}}/historicos-chamados
+Content-Type: application/json
+
+{"descricao":"Chamado aberto","tipoEvento":"CRIACAO","usuarioId":{{solicitanteId}},"chamadoId":{{chamadoId}}}
+
+> {% client.global.set("historicoId", response.body.id); %}
+
+### 7. Consultar chamado
+GET {{baseUrl}}/chamados/{{chamadoId}}
+
+### 8. Buscar por título, ignorando maiúsculas
+GET {{baseUrl}}/chamados?titulo=computador
+
+### 9. Comentários do chamado
+GET {{baseUrl}}/comentarios?chamadoId={{chamadoId}}
+
+### 10. Histórico do chamado
+GET {{baseUrl}}/historicos-chamados?chamadoId={{chamadoId}}
+
+### 11. Finalizar; dataResolucao é gerada pelo servidor
+PUT {{baseUrl}}/chamados/{{chamadoId}}
+Content-Type: application/json
+
+{
+  "titulo":"Computador não liga",
+  "descricao":"Fonte substituída",
+  "solicitanteId":{{solicitanteId}},
+  "tecnicoId":{{tecnicoId}},
+  "categoriaId":{{categoriaId}},
+  "estado":"FINALIZADO",
+  "prioridade":"ALTA"
+}
+
+### 12. Excluir comentário
+DELETE {{baseUrl}}/comentarios/{{comentarioId}}
+
+### 13. Excluir histórico
+DELETE {{baseUrl}}/historicos-chamados/{{historicoId}}
+
+### 14. Excluir chamado após remover dependências
+DELETE {{baseUrl}}/chamados/{{chamadoId}}
+
+### 15. Excluir categoria
+DELETE {{baseUrl}}/categorias/{{categoriaId}}
+
+### 16. Excluir técnico
+DELETE {{baseUrl}}/usuarios/{{tecnicoId}}
+
+### 17. Excluir solicitante
+DELETE {{baseUrl}}/usuarios/{{solicitanteId}}

@@ -34,7 +34,6 @@ public class ChamadoController {
 
     public ChamadoController(ChamadoService service) { this.service = service; }
 
-
     @GetMapping
     public ResponseEntity<List<ChamadoResponseDTO>> listar(@RequestParam(required = false) String titulo) {
         return ResponseEntity.ok(service.listar(titulo));

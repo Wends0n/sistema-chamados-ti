@@ -1,57 +1,79 @@
 package com.wendson.sistemachamados.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="chamados")
-public class Chamado {
 
+@Entity
+@Table(name = "chamados")
+public class Chamado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "titulo")
+    @Column(nullable = false, length = 200)
     private String titulo;
 
-    @Column(name = "descricao")
+    @Column(nullable = false, columnDefinition = "text")
     private String descricao;
 
-    @Column(name = "solicitante")
-    private String solicitante;
-
-    @Column(name = "estado", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private Estado estado;
 
-    @Column(name = "prioridade", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private Prioridade prioridade;
 
-    @Column(name = "data_abertura",nullable = false,updatable = false)
+    @Column(name = "data_abertura", nullable = false, updatable = false)
     private LocalDateTime dataAbertura;
 
+    @Column(name = "data_resolucao")
+    private LocalDateTime dataResolucao;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "solicitante_id", nullable = false)
+    private Usuario solicitante;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tecnico_id")
+    private Usuario tecnico;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
     @PrePersist
-    public void prePersist(){
-        this.dataAbertura = LocalDateTime.now();
+    void registrarData() {
+        if (dataAbertura == null) dataAbertura = LocalDateTime.now();
     }
 
     public Chamado(){
 
     }
 
-    public Chamado(String titulo, String descricao, String solicitante,Prioridade prioridade, Estado estado){
+    public Chamado(Long id, String titulo, String descricao, Estado estado, Prioridade prioridade, LocalDateTime dataAbertura, LocalDateTime dataResolucao, Usuario solicitante, Usuario tecnico, Categoria categoria) {
+        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
-        this.solicitante = solicitante;
-        this.prioridade = prioridade;
         this.estado = estado;
+        this.prioridade = prioridade;
+        this.dataAbertura = dataAbertura;
+        this.dataResolucao = dataResolucao;
+        this.solicitante = solicitante;
+        this.tecnico = tecnico;
+        this.categoria = categoria;
     }
 
-    public long getId(){
+    public Long getId() {
         return id;
     }
 
-    public String getTitulo(){
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
         return titulo;
     }
 
@@ -59,46 +81,67 @@ public class Chamado {
         this.titulo = titulo;
     }
 
-    public String getDescricao(){
+    public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao){
+    public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public String getSolicitante(){
-        return solicitante;
-    }
-
-    public void setSolicitante(String solicitante){
-        this.solicitante = solicitante;
-    }
-
-    public Estado getEstado(){
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(Estado estado){
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 
-    public Prioridade getPrioridade(){
+    public Prioridade getPrioridade() {
         return prioridade;
     }
 
-    public void setPrioridade(Prioridade prioridade){
+    public void setPrioridade(Prioridade prioridade) {
         this.prioridade = prioridade;
     }
 
-    public LocalDateTime getDataAbertura(){
+    public LocalDateTime getDataAbertura() {
         return dataAbertura;
     }
 
-    @Override
-    public String toString(){
-        return "Chamado[id = " + id + ", titulo = " + titulo + ", descricao = " + descricao + "]";
+    public void setDataAbertura(LocalDateTime dataAbertura) {
+        this.dataAbertura = dataAbertura;
     }
 
+    public LocalDateTime getDataResolucao() {
+        return dataResolucao;
+    }
 
+    public void setDataResolucao(LocalDateTime dataResolucao) {
+        this.dataResolucao = dataResolucao;
+    }
+
+    public Usuario getSolicitante() {
+        return solicitante;
+    }
+
+    public void setSolicitante(Usuario solicitante) {
+        this.solicitante = solicitante;
+    }
+
+    public Usuario getTecnico() {
+        return tecnico;
+    }
+
+    public void setTecnico(Usuario tecnico) {
+        this.tecnico = tecnico;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 }

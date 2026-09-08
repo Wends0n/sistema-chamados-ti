@@ -1,8 +1,6 @@
 package com.wendson.sistemachamados.service;
 
-import com.wendson.sistemachamados.dto.ChamadoRequestDTO;
-import com.wendson.sistemachamados.dto.ChamadoResponseDTO;
-
+import com.wendson.sistemachamados.dto.*;
 import java.util.List;
 
 public interface ChamadoService {

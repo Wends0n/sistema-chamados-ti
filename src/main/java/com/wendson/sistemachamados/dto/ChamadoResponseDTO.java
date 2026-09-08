@@ -1,65 +1,97 @@
 package com.wendson.sistemachamados.dto;
 
-import com.wendson.sistemachamados.entity.Estado;
-import com.wendson.sistemachamados.entity.Prioridade;
+import com.wendson.sistemachamados.entity.*;
 import java.time.LocalDateTime;
 
 public class ChamadoResponseDTO {
-    private long id;
+    private Long id;
     private String titulo;
     private String descricao;
-    private String solicitante;
     private Estado estado;
     private Prioridade prioridade;
+    private Long solicitanteId;
+    private Long tecnicoId;
+    private Long categoriaId;
     private LocalDateTime dataAbertura;
+    private LocalDateTime dataResolucao;
 
-    public void setId(long id){
-        this.id = id;
-    }
-    public long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setTitulo(String titulo){
-        this.titulo = titulo;
+    public void setId(Long id) {
+        this.id = id;
     }
-    public String getTitulo(){
+
+    public String getTitulo() {
         return titulo;
     }
 
-    public void setDescricao(String descricao){
-        this.descricao = descricao;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
-    public String getDescricao(){
+
+    public String getDescricao() {
         return descricao;
     }
 
-    public void setSolicitante(String solicitante){
-        this.solicitante = solicitante;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
-    public String getSolicitante(){
-        return solicitante;
+
+    public Estado getEstado() {
+        return estado;
     }
 
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
-    public Estado getEstado(){
-        return estado;
-    }
 
-    public void setPrioridade(Prioridade prioridade){
-        this.prioridade = prioridade;
-    }
-    public Prioridade getPrioridade(){
+    public Prioridade getPrioridade() {
         return prioridade;
     }
 
-    public void setDataAbertura(LocalDateTime dataAbertura){
-        this.dataAbertura = dataAbertura;
+    public void setPrioridade(Prioridade prioridade) {
+        this.prioridade = prioridade;
     }
-    public LocalDateTime getDataAbertura(){
+
+    public Long getSolicitanteId() {
+        return solicitanteId;
+    }
+
+    public void setSolicitanteId(Long solicitanteId) {
+        this.solicitanteId = solicitanteId;
+    }
+
+    public Long getTecnicoId() {
+        return tecnicoId;
+    }
+
+    public void setTecnicoId(Long tecnicoId) {
+        this.tecnicoId = tecnicoId;
+    }
+
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
+    }
+
+    public LocalDateTime getDataAbertura() {
         return dataAbertura;
     }
 
+    public void setDataAbertura(LocalDateTime dataAbertura) {
+        this.dataAbertura = dataAbertura;
+    }
+
+    public LocalDateTime getDataResolucao() {
+        return dataResolucao;
+    }
+
+    public void setDataResolucao(LocalDateTime dataResolucao) {
+        this.dataResolucao = dataResolucao;
+    }
 }

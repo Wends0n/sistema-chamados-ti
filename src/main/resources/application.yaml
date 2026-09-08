@@ -1,18 +1,11 @@
 spring:
   application:
     name: sistema-chamados-ti
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/chamadosbd
     username: postgres
     password: post2001
-
   jpa:
+    open-in-view: false
     hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: validate
