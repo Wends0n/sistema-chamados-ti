@@ -4,6 +4,22 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "usuario")
+@NamedNativeQueries({
+    @NamedNativeQuery(
+        name = "Usuario.listar",
+        query = "SELECT * FROM usuario ORDER BY id",
+        resultClass = Usuario.class
+    ),
+    @NamedNativeQuery(
+        name = "Usuario.buscarPorId",
+        query = "SELECT * FROM usuario WHERE id = :id",
+        resultClass = Usuario.class
+    ),
+    @NamedNativeQuery(
+        name = "Usuario.emailEmUso",
+        query = "SELECT EXISTS (SELECT 1 FROM usuario WHERE lower(email) = lower(:email) AND id <> :id)"
+    )
+})
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

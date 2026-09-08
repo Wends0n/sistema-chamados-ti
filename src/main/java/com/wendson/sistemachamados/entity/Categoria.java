@@ -4,6 +4,18 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categoria")
+@NamedNativeQueries({
+    @NamedNativeQuery(
+        name = "Categoria.listar",
+        query = "SELECT * FROM categoria ORDER BY id",
+        resultClass = Categoria.class
+    ),
+    @NamedNativeQuery(
+        name = "Categoria.buscarPorId",
+        query = "SELECT * FROM categoria WHERE id = :id",
+        resultClass = Categoria.class
+    )
+})
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

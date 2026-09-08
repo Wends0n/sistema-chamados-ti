@@ -6,6 +6,23 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "historico_chamado")
+@NamedNativeQueries({
+    @NamedNativeQuery(
+        name = "HistoricoChamado.listar",
+        query = "SELECT * FROM historico_chamado ORDER BY id",
+        resultClass = HistoricoChamado.class
+    ),
+    @NamedNativeQuery(
+        name = "HistoricoChamado.buscarPorId",
+        query = "SELECT * FROM historico_chamado WHERE id = :id",
+        resultClass = HistoricoChamado.class
+    ),
+    @NamedNativeQuery(
+        name = "HistoricoChamado.buscarPorChamado",
+        query = "SELECT * FROM historico_chamado WHERE chamado_id = :chamadoId ORDER BY data_hora, id",
+        resultClass = HistoricoChamado.class
+    )
+})
 public class HistoricoChamado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

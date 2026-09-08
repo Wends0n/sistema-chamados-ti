@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HistoricoChamadoRepository extends JpaRepository<HistoricoChamado, Long> {
-    @Query(value = "SELECT * FROM historico_chamado ORDER BY id", nativeQuery = true)
+    @Query(name = "HistoricoChamado.listar", nativeQuery = true)
     List<HistoricoChamado> listar();
 
-    @Query(value = "SELECT * FROM historico_chamado WHERE id = :id", nativeQuery = true)
+    @Query(name = "HistoricoChamado.buscarPorId", nativeQuery = true)
     Optional<HistoricoChamado> buscarPorId(@Param("id") Long id);
 
-    @Query(value = "SELECT * FROM historico_chamado WHERE chamado_id = :chamadoId ORDER BY data_hora, id", nativeQuery = true)
+    @Query(name = "HistoricoChamado.buscarPorChamado", nativeQuery = true)
     List<HistoricoChamado> buscarPorChamado(@Param("chamadoId") Long chamadoId);
 }
