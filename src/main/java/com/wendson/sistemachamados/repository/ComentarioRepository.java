@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ComentarioRepository extends JpaRepository<Comentario, Long> {
-    @Query(name = "Comentario.listar", nativeQuery = true)
+    @Query(value = "SELECT * FROM comentario ORDER BY id", nativeQuery = true)
     List<Comentario> listar();
 
-    @Query(name = "Comentario.buscarPorId", nativeQuery = true)
+    @Query(value = "SELECT * FROM comentario WHERE id = :id", nativeQuery = true)
     Optional<Comentario> buscarPorId(@Param("id") Long id);
 
-    @Query(name = "Comentario.buscarPorChamado", nativeQuery = true)
+    @Query(value = "SELECT * FROM comentario WHERE chamado_id = :chamadoId ORDER BY data_hora, id", nativeQuery = true)
     List<Comentario> buscarPorChamado(@Param("chamadoId") Long chamadoId);
 }

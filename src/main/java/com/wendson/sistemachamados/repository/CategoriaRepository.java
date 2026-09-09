@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    @Query(name = "Categoria.listar", nativeQuery = true)
+    @Query(value = "SELECT * FROM categoria ORDER BY id", nativeQuery = true)
     List<Categoria> listar();
 
-    @Query(name = "Categoria.buscarPorId", nativeQuery = true)
+    @Query(value = "SELECT * FROM categoria WHERE id = :id", nativeQuery = true)
     Optional<Categoria> buscarPorId(@Param("id") Long id);
 }

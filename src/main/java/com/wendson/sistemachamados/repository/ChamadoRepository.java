@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
-    @Query(name = "Chamado.listar", nativeQuery = true)
+    @Query(value = "SELECT * FROM chamados ORDER BY id", nativeQuery = true)
     List<Chamado> listar();
 
-    @Query(name = "Chamado.buscarPorId", nativeQuery = true)
+    @Query(value = "SELECT * FROM chamados WHERE id = :id", nativeQuery = true)
     Optional<Chamado> buscarPorId(@Param("id") Long id);
 
-    @Query(name = "Chamado.buscarPorTitulo", nativeQuery = true)
+    @Query(value = "SELECT * FROM chamados WHERE strpos(lower(titulo), lower(:titulo)) > 0 ORDER BY id", nativeQuery = true)
     List<Chamado> buscarPorTitulo(@Param("titulo") String titulo);
 }

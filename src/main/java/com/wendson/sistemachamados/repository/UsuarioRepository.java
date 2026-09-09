@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    @Query(name = "Usuario.listar", nativeQuery = true)
+    @Query(value = "SELECT * FROM usuario ORDER BY id", nativeQuery = true)
     List<Usuario> listar();
 
-    @Query(name = "Usuario.buscarPorId", nativeQuery = true)
+    @Query(value = "SELECT * FROM usuario WHERE id = :id", nativeQuery = true)
     Optional<Usuario> buscarPorId(@Param("id") Long id);
 
-    @Query(name = "Usuario.emailEmUso", nativeQuery = true)
+    @Query(value = "SELECT EXISTS (SELECT 1 FROM usuario WHERE lower(email) = lower(:email) AND id <> :id)", nativeQuery = true)
     boolean emailEmUso(@Param("email") String email, @Param("id") Long id);
 }
