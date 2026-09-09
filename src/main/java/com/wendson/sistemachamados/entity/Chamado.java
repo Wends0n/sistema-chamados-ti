@@ -51,11 +51,6 @@ public class Chamado {
     @OneToMany(mappedBy = "chamado",fetch = FetchType.LAZY)
     private List<HistoricoChamado> historicoChamado = new ArrayList<>();
 
-    @PrePersist
-    void registrarData() {
-        if (dataAbertura == null) dataAbertura = LocalDateTime.now();
-    }
-
     public Chamado(){
 
     }

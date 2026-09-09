@@ -25,11 +25,6 @@ public class Comentario {
     @JoinColumn(name = "chamado_id", nullable = false)
     private Chamado chamado;
 
-    @PrePersist
-    void registrarData() {
-        if (dataHora == null) dataHora = LocalDateTime.now();
-    }
-
     public Comentario(){
 
     }
