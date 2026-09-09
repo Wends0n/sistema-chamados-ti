@@ -13,17 +13,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoriaResponseDTO> listar() {
         List<Categoria> entidades = repository.listar();
         return entidades.stream().map(this::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CategoriaResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
 
     @Override

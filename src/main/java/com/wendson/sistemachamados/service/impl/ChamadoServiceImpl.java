@@ -13,19 +13,21 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+
 public class ChamadoServiceImpl implements ChamadoService {
     private final ChamadoRepository repository;
     private final UsuarioRepository usuarioRepository;
     private final CategoriaRepository categoriaRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChamadoResponseDTO> listar(String titulo) {
         List<Chamado> entidades = (titulo == null || titulo.isBlank()) ? repository.listar() : repository.buscarPorTitulo(titulo);
         return entidades.stream().map(this::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ChamadoResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
 
     @Override

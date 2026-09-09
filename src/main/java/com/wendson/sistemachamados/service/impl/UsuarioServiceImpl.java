@@ -15,17 +15,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
         List<Usuario> entidades = repository.listar();
         return entidades.stream().map(this::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
 
     @Override

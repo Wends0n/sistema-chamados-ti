@@ -12,29 +12,33 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+
 public class HistoricoChamadoServiceImpl implements HistoricoChamadoService {
     private final HistoricoChamadoRepository repository;
     private final UsuarioRepository usuarioRepository;
     private final ChamadoRepository chamadoRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<HistoricoChamadoResponseDTO> listar(Long chamadoId) {
         List<HistoricoChamado> entidades = chamadoId == null ? repository.listar() : repository.buscarPorChamado(chamadoId);
         return entidades.stream().map(this::toResponse).toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HistoricoChamadoResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
 
     @Override
     @Transactional
     public HistoricoChamadoResponseDTO criar(HistoricoChamadoRequestDTO request) {
         HistoricoChamado entidade = new HistoricoChamado();
+        entidade.setDataHora(LocalDateTime.now());
         copiarDados(request, entidade);
         return toResponse(repository.save(entidade));
     }
