@@ -2,27 +2,12 @@ package com.wendson.sistemachamados.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "chamados")
-@NamedNativeQueries({
-    @NamedNativeQuery(
-        name = "Chamado.listar",
-        query = "SELECT * FROM chamados ORDER BY id",
-        resultClass = Chamado.class
-    ),
-    @NamedNativeQuery(
-        name = "Chamado.buscarPorId",
-        query = "SELECT * FROM chamados WHERE id = :id",
-        resultClass = Chamado.class
-    ),
-    @NamedNativeQuery(
-        name = "Chamado.buscarPorTitulo",
-        query = "SELECT * FROM chamados WHERE strpos(lower(titulo), lower(:titulo)) > 0 ORDER BY id",
-        resultClass = Chamado.class
-    )
-})
+
 public class Chamado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +44,12 @@ public class Chamado {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
+
+    @OneToMany(mappedBy = "chamado", fetch = FetchType.LAZY)
+    private List<Comentario> comentarioChamado = new ArrayList<>();
+
+    @OneToMany(mappedBy = "chamado",fetch = FetchType.LAZY)
+    private List<HistoricoChamado> historicoChamado = new ArrayList<>();
 
     @PrePersist
     void registrarData() {
@@ -161,4 +152,15 @@ public class Chamado {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
+
+
+    ///Get dos relacionamentos
+    public List<Comentario> getComentarioChamado(){
+        return comentarioChamado;
+    }
+
+    public List<HistoricoChamado> getHistoricoChamado(){
+        return historicoChamado;
+    }
+
 }

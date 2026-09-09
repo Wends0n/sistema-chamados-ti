@@ -5,23 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comentario")
-@NamedNativeQueries({
-    @NamedNativeQuery(
-        name = "Comentario.listar",
-        query = "SELECT * FROM comentario ORDER BY id",
-        resultClass = Comentario.class
-    ),
-    @NamedNativeQuery(
-        name = "Comentario.buscarPorId",
-        query = "SELECT * FROM comentario WHERE id = :id",
-        resultClass = Comentario.class
-    ),
-    @NamedNativeQuery(
-        name = "Comentario.buscarPorChamado",
-        query = "SELECT * FROM comentario WHERE chamado_id = :chamadoId ORDER BY data_hora, id",
-        resultClass = Comentario.class
-    )
-})
+
 public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

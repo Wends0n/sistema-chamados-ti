@@ -2,24 +2,12 @@ package com.wendson.sistemachamados.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "usuario")
-@NamedNativeQueries({
-    @NamedNativeQuery(
-        name = "Usuario.listar",
-        query = "SELECT * FROM usuario ORDER BY id",
-        resultClass = Usuario.class
-    ),
-    @NamedNativeQuery(
-        name = "Usuario.buscarPorId",
-        query = "SELECT * FROM usuario WHERE id = :id",
-        resultClass = Usuario.class
-    ),
-    @NamedNativeQuery(
-        name = "Usuario.emailEmUso",
-        query = "SELECT EXISTS (SELECT 1 FROM usuario WHERE lower(email) = lower(:email) AND id <> :id)"
-    )
-})
+
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +22,18 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_usuario", nullable = false, length = 20)
     private TipoUsuario tipoUsuario;
+
+    @OneToMany(mappedBy = "solicitante", fetch = FetchType.LAZY)
+    private List<Chamado> chamadosSolicitados = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tecnico", fetch = FetchType.LAZY)
+    private List<Chamado> chamadosAtribuidos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private List<Comentario> comentarioUsuario = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private List<HistoricoChamado> historicoChamadoUsuario = new ArrayList<>();
 
     public Usuario(){
 
@@ -77,4 +77,23 @@ public class Usuario {
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
+
+
+
+    public List<Chamado> getChamadosSolicitados(){
+        return chamadosSolicitados;
+    }
+
+    public List<Chamado> getChamadosAtribuidos(){
+        return chamadosAtribuidos;
+    }
+
+    public List<Comentario> getComentarioUsuario(){
+        return comentarioUsuario;
+    }
+
+    public List<HistoricoChamado> getHistoricoChamadoUsuario(){
+        return historicoChamadoUsuario;
+    }
+
 }

@@ -2,20 +2,12 @@ package com.wendson.sistemachamados.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "categoria")
-@NamedNativeQueries({
-    @NamedNativeQuery(
-        name = "Categoria.listar",
-        query = "SELECT * FROM categoria ORDER BY id",
-        resultClass = Categoria.class
-    ),
-    @NamedNativeQuery(
-        name = "Categoria.buscarPorId",
-        query = "SELECT * FROM categoria WHERE id = :id",
-        resultClass = Categoria.class
-    )
-})
+
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +18,10 @@ public class Categoria {
 
     @Column(nullable = false, columnDefinition = "text")
     private String descricao;
+
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY)
+    private List<Chamado> categoriaChamado = new ArrayList<>();
+
 
     public Categoria(){
 
@@ -60,4 +56,9 @@ public class Categoria {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public List<Chamado> getCategoriaChamado(){
+        return categoriaChamado;
+    }
+
 }
