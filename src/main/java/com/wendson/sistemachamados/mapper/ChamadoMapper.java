@@ -20,8 +20,8 @@ public interface ChamadoMapper extends TextoMapper{
     @Mapping(target = "tecnico", ignore = true)
     @Mapping(target = "categoria", ignore = true)
 
-    @Mapping(target = "comentarioChamado", source = "comentarioChamado", qualifiedByName = "normalizarTexto")
-    @Mapping(target = "historicoChamado", source = "historicoChamado", qualifiedByName = "normalizarTexto")
+    @Mapping(target = "comentarioChamado", ignore = true)
+    @Mapping(target = "historicoChamado", ignore = true)
 
     Chamado toEntity(ChamadoRequestDTO request);
 

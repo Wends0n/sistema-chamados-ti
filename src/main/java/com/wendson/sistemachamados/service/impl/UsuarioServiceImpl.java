@@ -5,6 +5,7 @@ import com.wendson.sistemachamados.dto.UsuarioResponseDTO;
 import com.wendson.sistemachamados.entity.Usuario;
 import com.wendson.sistemachamados.exception.ConflictException;
 import com.wendson.sistemachamados.exception.ResourceNotFoundException;
+import com.wendson.sistemachamados.mapper.UsuarioMapper;
 import com.wendson.sistemachamados.repository.UsuarioRepository;
 import com.wendson.sistemachamados.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -17,32 +18,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository repository;
+    private final UsuarioMapper usuarioMapper;
 
     @Override
     @Transactional(readOnly = true)
     public List<UsuarioResponseDTO> listar() {
         List<Usuario> entidades = repository.listar();
-        return entidades.stream().map(this::toResponse).toList();
+        return entidades.stream().map(usuarioMapper::toResponse).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UsuarioResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
+    public UsuarioResponseDTO buscarPorId(Long id) {
+        return usuarioMapper.toResponse(buscarEntidade(id));
+    }
 
     @Override
     @Transactional
     public UsuarioResponseDTO criar(UsuarioRequestDTO request) {
-        Usuario entidade = new Usuario();
-        copiarDados(request, entidade);
-        return toResponse(repository.save(entidade));
+        Usuario entidade = usuarioMapper.toEntity(request);
+        validarEmailDisponivel(entidade.getEmail(), 0L);
+        return usuarioMapper.toResponse(repository.save(entidade));
     }
 
     @Override
     @Transactional
     public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO request) {
         Usuario entidade = buscarEntidade(id);
-        copiarDados(request, entidade);
-        return toResponse(repository.save(entidade));
+        Usuario dados = usuarioMapper.toEntity(request);
+
+        validarEmailDisponivel(dados.getEmail(), entidade.getId());
+
+        entidade.setNome(dados.getNome());
+        entidade.setEmail(dados.getEmail());
+        entidade.setTipoUsuario(dados.getTipoUsuario());
+
+        return usuarioMapper.toResponse(repository.save(entidade));
     }
 
     @Override
@@ -53,21 +64,10 @@ public class UsuarioServiceImpl implements UsuarioService {
         return repository.buscarPorId(id).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado: " + id));
     }
 
-    private void copiarDados(UsuarioRequestDTO request, Usuario entidade) {
-        entidade.setNome(request.getNome().strip());
-        entidade.setEmail(request.getEmail().strip().toLowerCase(java.util.Locale.ROOT));
-        entidade.setTipoUsuario(request.getTipoUsuario());
-        if (repository.emailEmUso(entidade.getEmail(), entidade.getId() == null ? 0L : entidade.getId())) {
+    private void validarEmailDisponivel(String email, Long usuarioId) {
+        if (repository.emailEmUso(email, usuarioId)) {
             throw new ConflictException("Email já cadastrado");
         }
     }
 
-    private UsuarioResponseDTO toResponse(Usuario entidade) {
-        UsuarioResponseDTO response = new UsuarioResponseDTO();
-        response.setId(entidade.getId());
-        response.setNome(entidade.getNome());
-        response.setEmail(entidade.getEmail());
-        response.setTipoUsuario(entidade.getTipoUsuario());
-        return response;
-    }
 }

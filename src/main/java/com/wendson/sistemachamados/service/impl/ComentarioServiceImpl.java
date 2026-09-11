@@ -2,6 +2,7 @@ package com.wendson.sistemachamados.service.impl;
 
 import com.wendson.sistemachamados.dto.*;
 import com.wendson.sistemachamados.entity.*;
+import com.wendson.sistemachamados.mapper.ComentarioMapper;
 import com.wendson.sistemachamados.repository.*;
 import com.wendson.sistemachamados.service.ComentarioService;
 import com.wendson.sistemachamados.exception.*;
@@ -19,33 +20,47 @@ public class ComentarioServiceImpl implements ComentarioService {
     private final ComentarioRepository repository;
     private final UsuarioRepository usuarioRepository;
     private final ChamadoRepository chamadoRepository;
+    private final ComentarioMapper comentarioMapper;
 
     @Override
     @Transactional(readOnly = true)
     public List<ComentarioResponseDTO> listar(Long chamadoId) {
         List<Comentario> entidades = chamadoId == null ? repository.listar() : repository.buscarPorChamado(chamadoId);
-        return entidades.stream().map(this::toResponse).toList();
+        return entidades.stream().map(comentarioMapper::toResponse).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ComentarioResponseDTO buscarPorId(Long id) { return toResponse(buscarEntidade(id)); }
+    public ComentarioResponseDTO buscarPorId(Long id) {
+        return comentarioMapper.toResponse(buscarEntidade(id));
+    }
 
     @Override
     @Transactional
     public ComentarioResponseDTO criar(ComentarioRequestDTO request) {
-        Comentario entidade = new Comentario();
+        Comentario entidade = comentarioMapper.toEntity(request);
+
+        entidade.setUsuario(buscarUsuario(request.getUsuarioId()));
+        entidade.setChamado(buscarChamado(request.getChamadoId()));
         entidade.setDataHora(LocalDateTime.now());
-        copiarDados(request, entidade);
-        return toResponse(repository.save(entidade));
+
+        return comentarioMapper.toResponse(repository.save(entidade));
     }
 
     @Override
     @Transactional
     public ComentarioResponseDTO atualizar(Long id, ComentarioRequestDTO request) {
         Comentario entidade = buscarEntidade(id);
-        copiarDados(request, entidade);
-        return toResponse(repository.save(entidade));
+        Comentario dados = comentarioMapper.toEntity(request);
+
+        Usuario usuario = buscarUsuario(request.getUsuarioId());
+        Chamado chamado = buscarChamado(request.getChamadoId());
+
+        entidade.setMensagem(dados.getMensagem());
+        entidade.setUsuario(usuario);
+        entidade.setChamado(chamado);
+
+        return comentarioMapper.toResponse(repository.save(entidade));
     }
 
     @Override
@@ -56,19 +71,12 @@ public class ComentarioServiceImpl implements ComentarioService {
         return repository.buscarPorId(id).orElseThrow(() -> new ResourceNotFoundException("Comentario não encontrado: " + id));
     }
 
-    private void copiarDados(ComentarioRequestDTO request, Comentario entidade) {
-        entidade.setMensagem(request.getMensagem().strip());
-        entidade.setUsuario(usuarioRepository.buscarPorId(request.getUsuarioId()).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado: " + request.getUsuarioId())));
-        entidade.setChamado(chamadoRepository.buscarPorId(request.getChamadoId()).orElseThrow(() -> new ResourceNotFoundException("Chamado não encontrado: " + request.getChamadoId())));
+    private Usuario buscarUsuario(Long id) {
+        return usuarioRepository.buscarPorId(id).orElseThrow(() -> new ResourceNotFoundException("Usuario não encontrado: " + id));
     }
 
-    private ComentarioResponseDTO toResponse(Comentario entidade) {
-        ComentarioResponseDTO response = new ComentarioResponseDTO();
-        response.setId(entidade.getId());
-        response.setMensagem(entidade.getMensagem());
-        response.setUsuarioId(entidade.getUsuario() == null ? null : entidade.getUsuario().getId());
-        response.setChamadoId(entidade.getChamado() == null ? null : entidade.getChamado().getId());
-        response.setDataHora(entidade.getDataHora());
-        return response;
+    private Chamado buscarChamado(Long id) {
+        return chamadoRepository.buscarPorId(id).orElseThrow(() -> new ResourceNotFoundException("Chamado não encontrado: " + id));
     }
+
 }

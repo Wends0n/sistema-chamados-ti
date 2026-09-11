@@ -4,7 +4,7 @@
 POST {{baseUrl}}/usuarios
 Content-Type: application/json
 
-{"nome":"Marta","email":"marta@exemplo.com","tipoUsuario":"SOLICITANTE"}
+{"nome":"Vilma","email":"vilma@exemplo.com","tipoUsuario":"SOLICITANTE"}
 
 > {% client.global.set("solicitanteId", response.body.id); %}
 
