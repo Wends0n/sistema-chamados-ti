@@ -7,9 +7,10 @@ import com.wendson.sistemachamados.repository.*;
 import com.wendson.sistemachamados.service.CategoriaService;
 import com.wendson.sistemachamados.exception.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,8 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CategoriaResponseDTO> listar() {
-        List<Categoria> entidades = repository.listar();
-        return entidades.stream().map(categoriaMapper::toResponse).toList();
+    public Page<CategoriaResponseDTO> listar(Pageable pageable) {
+        return repository.listar(pageable).map(categoriaMapper::toResponse);
     }
 
     @Override

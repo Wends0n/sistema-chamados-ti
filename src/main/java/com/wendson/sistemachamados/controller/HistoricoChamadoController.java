@@ -5,6 +5,8 @@ import com.wendson.sistemachamados.dto.HistoricoChamadoResponseDTO;
 import com.wendson.sistemachamados.service.HistoricoChamadoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -18,8 +20,8 @@ public class HistoricoChamadoController {
     private final HistoricoChamadoService service;
 
     @GetMapping
-    public ResponseEntity<List<HistoricoChamadoResponseDTO>> listar(@RequestParam(required = false) Long chamadoId) {
-        return ResponseEntity.ok(service.listar(chamadoId));
+    public ResponseEntity<Page<HistoricoChamadoResponseDTO>> listar(@RequestParam(required = false) Long chamadoId, Pageable pageable) {
+        return ResponseEntity.ok(service.listar(chamadoId, pageable));
     }
 
     @GetMapping("/{id}")

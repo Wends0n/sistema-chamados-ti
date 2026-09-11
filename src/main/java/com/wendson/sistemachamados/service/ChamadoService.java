@@ -1,10 +1,12 @@
 package com.wendson.sistemachamados.service;
 
 import com.wendson.sistemachamados.dto.*;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 public interface ChamadoService {
-    List<ChamadoResponseDTO> listar(String titulo);
+    Page<ChamadoResponseDTO> listar(String titulo, Pageable pageable);
     ChamadoResponseDTO buscarPorId(Long id);
     ChamadoResponseDTO criar(ChamadoRequestDTO request);
     ChamadoResponseDTO atualizar(Long id, ChamadoRequestDTO request);

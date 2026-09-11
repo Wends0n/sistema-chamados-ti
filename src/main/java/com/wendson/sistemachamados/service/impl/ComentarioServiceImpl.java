@@ -8,10 +8,11 @@ import com.wendson.sistemachamados.service.ComentarioService;
 import com.wendson.sistemachamados.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +25,9 @@ public class ComentarioServiceImpl implements ComentarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ComentarioResponseDTO> listar(Long chamadoId) {
-        List<Comentario> entidades = chamadoId == null ? repository.listar() : repository.buscarPorChamado(chamadoId);
-        return entidades.stream().map(comentarioMapper::toResponse).toList();
+    public Page<ComentarioResponseDTO> listar(Long chamadoId, Pageable pageable) {
+        Page<Comentario> entidades = chamadoId == null ? repository.listar(pageable) : repository.buscarPorChamado(chamadoId, pageable);
+        return entidades.map(comentarioMapper::toResponse);
     }
 
     @Override

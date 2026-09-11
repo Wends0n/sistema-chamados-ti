@@ -9,6 +9,8 @@ import com.wendson.sistemachamados.mapper.UsuarioMapper;
 import com.wendson.sistemachamados.repository.UsuarioRepository;
 import com.wendson.sistemachamados.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UsuarioResponseDTO> listar() {
-        List<Usuario> entidades = repository.listar();
-        return entidades.stream().map(usuarioMapper::toResponse).toList();
+    public Page<UsuarioResponseDTO> listar(Pageable pageable) {
+        Page<Usuario> entidades = repository.listar(pageable);
+        return entidades.map(usuarioMapper::toResponse);
     }
 
     @Override

@@ -1,101 +1,125 @@
-@baseUrl = http://localhost:8080/api
-
+```http
 ### 1. Cadastrar solicitante
-POST {{baseUrl}}/usuarios
+POST http://localhost:8080/api/usuarios
 Content-Type: application/json
 
-{"nome":"Vilma","email":"vilma@exemplo.com","tipoUsuario":"SOLICITANTE"}
+{
+  "nome": "Maria",
+  "email": "maria12345@exemplo.com",
+  "tipoUsuario": "SOLICITANTE"
+}
 
-> {% client.global.set("solicitanteId", response.body.id); %}
 
 ### 2. Cadastrar técnico
-POST {{baseUrl}}/usuarios
+POST http://localhost:8080/api/usuarios
 Content-Type: application/json
 
-{"nome":"João","email":"joao@exemplo.com","tipoUsuario":"TECNICO"}
+{
+  "nome": "João Souza",
+  "email": "joaosouzaq@exemplo.com",
+  "tipoUsuario": "TECNICO"
+}
 
-> {% client.global.set("tecnicoId", response.body.id); %}
 
 ### 3. Cadastrar categoria
-POST {{baseUrl}}/categorias
+POST http://localhost:8080/api/categorias
 Content-Type: application/json
 
-{"nome":"Hardware","descricao":"Problemas com equipamentos"}
+{
+  "nome": "Hardware",
+  "descricao": "Problemas com equipamentos"
+}
 
-> {% client.global.set("categoriaId", response.body.id); %}
 
 ### 4. Criar chamado
-POST {{baseUrl}}/chamados
+POST http://localhost:8080/api/chamados
 Content-Type: application/json
 
 {
-  "titulo":"Computador não liga",
-  "descricao":"Sem sinal ao pressionar o botão",
+  "titulo": "Computador não liga",
+  "descricao": "Sem sinal ao pressionar o botão",
   "solicitanteId": 3,
-  "tecnicoId": 1,
+  "tecnicoId": 4,
   "categoriaId": 1,
-  "estado":"ABERTO",
-  "prioridade":"ALTA"
+  "estado": "ABERTO",
+  "prioridade": "ALTA"
 }
 
-> {% client.global.set("chamadoId", response.body.id); %}
 
-### 5. Comentar
-POST {{baseUrl}}/comentarios
-Content-Type: application/json
-
-{"mensagem":"Vou verificar a fonte","usuarioId":{{tecnicoId}},"chamadoId":{{chamadoId}}}
-
-> {% client.global.set("comentarioId", response.body.id); %}
-
-### 6. Registrar histórico explicitamente
-POST {{baseUrl}}/historicos-chamados
-Content-Type: application/json
-
-{"descricao":"Chamado aberto","tipoEvento":"CRIACAO","usuarioId":{{solicitanteId}},"chamadoId":{{chamadoId}}}
-
-> {% client.global.set("historicoId", response.body.id); %}
-
-### 7. Consultar chamado
-GET {{baseUrl}}/chamados/{{chamadoId}}
-
-### 8. Buscar por título, ignorando maiúsculas
-GET {{baseUrl}}/chamados?titulo=computador
-
-### 9. Comentários do chamado
-GET {{baseUrl}}/comentarios?chamadoId={{chamadoId}}
-
-### 10. Histórico do chamado
-GET {{baseUrl}}/historicos-chamados?chamadoId={{chamadoId}}
-
-### 11. Finalizar; dataResolucao é gerada pelo servidor
-PUT {{baseUrl}}/chamados/{{chamadoId}}
+### 5. Adicionar comentário ao chamado de ID 1
+POST http://localhost:8080/api/comentarios
 Content-Type: application/json
 
 {
-  "titulo":"Computador não liga",
-  "descricao":"Fonte substituída",
-  "solicitanteId":{{solicitanteId}},
-  "tecnicoId":{{tecnicoId}},
-  "categoriaId":{{categoriaId}},
-  "estado":"FINALIZADO",
-  "prioridade":"ALTA"
+  "mensagem": "Vou verificar a fonte",
+  "usuarioId": 4,
+  "chamadoId": 1
 }
 
-### 12. Excluir comentário
-DELETE {{baseUrl}}/comentarios/{{comentarioId}}
 
-### 13. Excluir histórico
-DELETE {{baseUrl}}/historicos-chamados/{{historicoId}}
+### 6. Registrar histórico no chamado de ID 1
+POST http://localhost:8080/api/historicos-chamados
+Content-Type: application/json
 
-### 14. Excluir chamado após remover dependências
-DELETE {{baseUrl}}/chamados/{{chamadoId}}
+{
+  "descricao": "Chamado aberto",
+  "tipoEvento": "CRIACAO",
+  "usuarioId": 3,
+  "chamadoId": 1
+}
 
-### 15. Excluir categoria
-DELETE {{baseUrl}}/categorias/{{categoriaId}}
 
-### 16. Excluir técnico
-DELETE {{baseUrl}}/usuarios/{{tecnicoId}}
+### 7. Consultar chamado de ID 1
+GET http://localhost:8080/api/chamados/3
 
-### 17. Excluir solicitante
-DELETE {{baseUrl}}/usuarios/{{solicitanteId}}
+
+### 8. Buscar chamados cujo título contenha "computador"
+GET http://localhost:8080/api/chamados?titulo=computador
+
+
+### 9. Listar comentários do chamado de ID 1
+GET http://localhost:8080/api/comentarios?chamadoId=1
+
+
+### 10. Listar histórico do chamado de ID 1
+GET http://localhost:8080/api/historicos-chamados?chamadoId=1
+
+
+### 11. Finalizar chamado de ID 1
+PUT http://localhost:8080/api/chamados/3
+Content-Type: application/json
+
+{
+  "titulo": "Computador não liga",
+  "descricao": "Fonte substituída",
+  "solicitanteId": 3,
+  "tecnicoId": 4,
+  "categoriaId": 1,
+  "estado": "FINALIZADO",
+  "prioridade": "ALTA"
+}
+
+
+### 12. Excluir comentário de ID 1
+DELETE http://localhost:8080/api/comentarios/1
+
+
+### 13. Excluir histórico de ID 1
+DELETE http://localhost:8080/api/historicos-chamados/1
+
+
+### 14. Excluir chamado de ID 1
+DELETE http://localhost:8080/api/chamados/1
+
+
+### 15. Excluir categoria de ID 1
+DELETE http://localhost:8080/api/categorias/1
+
+
+### 16. Excluir técnico de ID 4
+DELETE http://localhost:8080/api/usuarios/4
+
+
+### 17. Excluir solicitante de ID 3
+DELETE http://localhost:8080/api/usuarios/1
+```

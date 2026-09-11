@@ -4,6 +4,8 @@ import com.wendson.sistemachamados.dto.*;
 import com.wendson.sistemachamados.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -17,8 +19,8 @@ public class CategoriaController {
     private final CategoriaService service;
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDTO>> listar() {
-        return ResponseEntity.ok(service.listar());
+    public ResponseEntity<Page<CategoriaResponseDTO>> listar(Pageable pageable) {
+        return ResponseEntity.ok(service.listar(pageable));
     }
 
     @GetMapping("/{id}")

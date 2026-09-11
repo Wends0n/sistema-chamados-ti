@@ -7,6 +7,8 @@ import com.wendson.sistemachamados.repository.*;
 import com.wendson.sistemachamados.service.ChamadoService;
 import com.wendson.sistemachamados.exception.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -23,9 +25,9 @@ public class ChamadoServiceImpl implements ChamadoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ChamadoResponseDTO> listar(String titulo) {
-        List<Chamado> entidades = (titulo == null || titulo.isBlank()) ? repository.listar() : repository.buscarPorTitulo(titulo);
-        return entidades.stream().map(chamadoMapper::toResponse).toList();
+    public Page<ChamadoResponseDTO> listar(String titulo, Pageable pageable) {
+        Page<Chamado> entidades = (titulo == null || titulo.isBlank()) ? repository.listar(pageable) : repository.buscarPorTitulo(titulo, pageable);
+        return entidades.map(chamadoMapper::toResponse);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ChamadoServiceImpl implements ChamadoService {
 
     @Override
     @Transactional
-    public void excluirTodos() { repository.deleteAll(repository.listar()); }
+    public void excluirTodos() { repository.deleteAll(); }
 
     private Chamado buscarEntidade(Long id) {
         return repository.buscarPorId(id).orElseThrow(() -> new ResourceNotFoundException("Chamado não encontrado: " + id));

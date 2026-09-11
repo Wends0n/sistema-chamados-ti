@@ -12,6 +12,8 @@ import com.wendson.sistemachamados.repository.HistoricoChamadoRepository;
 import com.wendson.sistemachamados.repository.UsuarioRepository;
 import com.wendson.sistemachamados.service.HistoricoChamadoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,9 +31,9 @@ public class HistoricoChamadoServiceImpl implements HistoricoChamadoService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<HistoricoChamadoResponseDTO> listar(Long chamadoId) {
-        List<HistoricoChamado> entidades = chamadoId == null ? repository.listar() : repository.buscarPorChamado(chamadoId);
-        return entidades.stream().map(historicoChamadoMapper::toResponse).toList();
+    public Page<HistoricoChamadoResponseDTO> listar(Long chamadoId, Pageable pageable) {
+        Page<HistoricoChamado> entidades = chamadoId == null ? repository.listar(pageable) : repository.buscarPorChamado(chamadoId,pageable);
+        return entidades.map(historicoChamadoMapper::toResponse);
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.wendson.sistemachamados.dto.*;
 import com.wendson.sistemachamados.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -17,8 +19,8 @@ public class UsuarioController {
     private final UsuarioService service;
 
     @GetMapping
-    public ResponseEntity<List<UsuarioResponseDTO>> listar() {
-        return ResponseEntity.ok(service.listar());
+    public ResponseEntity<Page<UsuarioResponseDTO>> listar(Pageable pageable) {
+        return ResponseEntity.ok(service.listar(pageable));
     }
 
     @GetMapping("/{id}")

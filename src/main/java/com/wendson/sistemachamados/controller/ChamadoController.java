@@ -6,6 +6,8 @@ import com.wendson.sistemachamados.dto.ChamadoRequestDTO;
 import com.wendson.sistemachamados.dto.ChamadoResponseDTO;
 import com.wendson.sistemachamados.service.ChamadoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,8 +37,8 @@ public class ChamadoController {
     public ChamadoController(ChamadoService service) { this.service = service; }
 
     @GetMapping
-    public ResponseEntity<List<ChamadoResponseDTO>> listar(@RequestParam(required = false) String titulo) {
-        return ResponseEntity.ok(service.listar(titulo));
+    public ResponseEntity<Page<ChamadoResponseDTO>> listar(@RequestParam(required = false) String titulo, Pageable pageable) {
+        return ResponseEntity.ok(service.listar(titulo, pageable));
     }
 
     @GetMapping("/{id}")
