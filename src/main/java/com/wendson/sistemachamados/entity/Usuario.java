@@ -19,6 +19,12 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 254)
     private String email;
 
+    @Column(nullable = false, length = 255)
+    private String senha;
+
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Tecnico tecnico;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_usuario", nullable = false, length = 20)
     private TipoUsuario tipoUsuario;
@@ -44,6 +50,26 @@ public class Usuario {
         this.nome = nome;
         this.email = email;
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Tecnico getTecnico() {
+        return tecnico;
+    }
+
+    public void setTecnico(Tecnico tecnico) {
+        if (this.tecnico == tecnico) return;
+        Tecnico anterior = this.tecnico;
+        this.tecnico = tecnico;
+        if (anterior != null && anterior.getUsuario() == this) anterior.setUsuario(null);
+        if (tecnico != null && tecnico.getUsuario() != this) tecnico.setUsuario(this);
     }
 
     public Long getId() {

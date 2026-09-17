@@ -10,6 +10,8 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UsuarioMapper extends TextoMapper{
 
+    @Mapping(target = "senha", ignore = true)
+    @Mapping(target = "tecnico", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "nome", source = "nome", qualifiedByName = "normalizarTexto")
     @Mapping(target = "email", source = "email", qualifiedByName = "normalizarEmail")
@@ -20,6 +22,7 @@ public interface UsuarioMapper extends TextoMapper{
     @Mapping(target = "historicoChamadoUsuario", ignore = true)
 
     Usuario toEntity(UsuarioRequestDTO request);
+    @Mapping(target = "especialidade", source = "tecnico.especialidade")
     UsuarioResponseDTO toResponse(Usuario entidade);
 
 }

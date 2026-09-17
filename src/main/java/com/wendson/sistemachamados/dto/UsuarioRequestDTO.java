@@ -13,6 +13,17 @@ public class UsuarioRequestDTO {
     @NotBlank @Email @Size(max = 254)
     private String email;
 
+    @NotBlank @Size(min = 8, max = 128)
+    private String senha;
+
+    @Size(max = 150)
+    private String especialidade;
+
+    public String getSenha() { return senha; }
+    public void setSenha(String senha) { this.senha = senha; }
+    public String getEspecialidade() { return especialidade; }
+    public void setEspecialidade(String especialidade) { this.especialidade = especialidade; }
+
     @NotNull
     private TipoUsuario tipoUsuario;
 

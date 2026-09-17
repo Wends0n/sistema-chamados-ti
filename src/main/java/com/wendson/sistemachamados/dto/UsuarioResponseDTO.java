@@ -7,6 +7,10 @@ public class UsuarioResponseDTO {
     private String nome;
     private String email;
     private TipoUsuario tipoUsuario;
+    private String especialidade;
+
+    public String getEspecialidade() { return especialidade; }
+    public void setEspecialidade(String especialidade) { this.especialidade = especialidade; }
 
     public Long getId() {
         return id;

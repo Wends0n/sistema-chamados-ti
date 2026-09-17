@@ -98,9 +98,9 @@ public class ChamadoServiceImpl implements ChamadoService {
 
         Usuario tecnico = buscarUsuario(id);
 
-        if (tecnico.getTipoUsuario() != TipoUsuario.TECNICO) {
+        if (tecnico.getTipoUsuario() != TipoUsuario.TECNICO || tecnico.getTecnico() == null) {
             throw new BusinessException(
-                    "O usuário atribuído como técnico deve ser do tipo TECNICO"
+                    "O usuário atribuído deve ser do tipo TECNICO e possuir cadastro de especialidade"
             );
         }
 
