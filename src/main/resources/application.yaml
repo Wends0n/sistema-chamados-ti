@@ -8,4 +8,8 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
+app:
+  admin:
+    email: ${ADMIN_EMAIL:admin@chamados.local}
+    senha: ${ADMIN_SENHA:Admin@12345}

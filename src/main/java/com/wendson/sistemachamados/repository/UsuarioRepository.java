@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    @Query(value = "SELECT EXISTS (SELECT 1 FROM usuario WHERE tipo_usuario = 'ADMIN')", nativeQuery = true)
+    boolean existeAdministrador();
+
     @Query(value = "SELECT * FROM usuario ORDER BY id",
             countQuery = "SELECT COUNT(*) FROM usuario",
             nativeQuery = true
