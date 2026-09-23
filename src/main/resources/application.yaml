@@ -1,10 +1,11 @@
 spring:
   application:
     name: sistema-chamados-ti
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/chamadosbd
-    username: postgres
-    password: post2001
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false
     hibernate:
